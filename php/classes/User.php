@@ -57,22 +57,15 @@ class User
         $email = mb_strtolower(trim($email));
         $pass = trim($pass);
 
-        return "User auth";
-
-
         $result = $mysqli->query("SELECT * FROM `entryforms` WHERE `email`='$email'");
         $result = $result->fetch_assoc();
         $pass_hash = $result["pass"];
 
         if (password_verify($pass, $pass_hash)) {
-            echo "exist"; //Такой пользователь существует
             $_SESSION["id"] = $result["id"];
-            $_SESSION["name"] = $result["name"];
-            $_SESSION["lastname"] = $result["lastname"];
-            $_SESSION["email"] = $result["email"];
+            return json_encode(["result" => "confirm"]); //Да, всё хорошо
         } else {
-            echo "ooops"; //Такого пользователя не существует
-            //  $mysqli->query("INSERT INTO `entryforms`(`name`, `lastname`, `email`, `pass`) VALUES ('$name', '$lastname', '$email', '$pass')");
+            return json_encode(["result" => "ooops"]); //Такого пользователя не существует
         }
     }
 }
